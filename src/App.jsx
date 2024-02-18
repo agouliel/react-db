@@ -1,35 +1,44 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const BASE_API_URL = 'http://localhost:5001/flask/api/songs';
+
+  const [songs, setSongs] = useState();
+
+  useEffect(() => {
+    (async () => {
+      const response = await fetch(BASE_API_URL);
+      if (response.ok) {
+        const results = await response.json();
+        setSongs(results.data);
+      }
+      else {
+        setSongs(null);
+      }
+    })();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <List list={songs}/>
   )
 }
+
+const List = ({ list }) => (
+  <ul>
+    {list.map(
+      (item) => (<Item key={item.sid} item={item}/>)
+    )}
+  </ul>
+)
+
+const Item = ({ item }) => (
+  <li>
+    <span>{item.title}</span>-
+    <span>{item.artist}</span>
+  </li>
+)
 
 export default App
