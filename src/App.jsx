@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const BASE_API_URL = 'http://localhost:5001/flask/api/songs';
+  const BASE_API_URL = 'http://localhost:5001/flask/api/songs/search/';
 
   const [songs, setSongs] = useState();
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(BASE_API_URL);
+      const response = await fetch(BASE_API_URL+searchTerm);
       if (response.ok) {
         const results = await response.json();
         setSongs(results.data);
@@ -19,10 +22,18 @@ function App() {
         setSongs(null);
       }
     })();
-  }, []);
+  }, [searchTerm]);
 
   return (
-    <List list={songs}/>
+    <>
+    {songs === undefined ?
+      <p>Waiting</p> :
+      <>
+        <Search search={searchTerm} onSearch={handleSearch}/>
+        <List list={songs}/>
+      </>
+    }
+    </>
   )
 }
 
@@ -40,5 +51,12 @@ const Item = ({ item }) => (
     <span>{item.artist}</span>
   </li>
 )
+
+const Search = (props) => (
+  <div>
+    <label htmlFor="search">Search: </label>
+    <input id="search" type="text" value={props.search} onChange={props.onSearch}/>
+  </div>
+);
 
 export default App
