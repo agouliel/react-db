@@ -1,8 +1,8 @@
-const BASE_API_URL = 'https://agouliel.ddns.net/flask/api/songs';
+const BASE_API_URL = 'http://localhost:5001/flask/api/songs/search/';
 
-export default class MicroblogApiClient {
+export default class ApiClient {
   constructor() {
-    this.base_url =  BASE_API_URL + '/api';
+    this.base_url =  BASE_API_URL;
   }
 
   async request(options) {

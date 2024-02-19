@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import { useApi } from './contexts/ApiProvider'
 
 function App() {
-  const BASE_API_URL = 'http://localhost:5001/flask/api/songs/search/';
-
   const [songs, setSongs] = useState();
   const [searchTerm, setSearchTerm] = useState('');
+  const api = useApi();
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -13,16 +13,15 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(BASE_API_URL+searchTerm);
+      const response = await api.get(searchTerm)
       if (response.ok) {
-        const results = await response.json();
-        setSongs(results.data);
+        setSongs(response.body.data);
       }
       else {
         setSongs(null);
       }
     })();
-  }, [searchTerm]);
+  }, [searchTerm, api]);
 
   return (
     <>
