@@ -11,6 +11,12 @@ function App() {
     setSearchTerm(event.target.value);
   };
 
+  const [searchClicked, setSearchClicked] = useState();
+
+  const handleClick = () => {
+    setSearchClicked(true)
+  };
+
   useEffect(() => {
     (async () => {
       const response = await api.get(searchTerm)
@@ -21,7 +27,7 @@ function App() {
         setSongs(null);
       }
     })();
-  }, [searchTerm, api]);
+  }, [searchClicked, api]);
 
   return (
     <>
@@ -29,6 +35,7 @@ function App() {
       <p>Waiting</p> :
       <>
         <Search search={searchTerm} onSearch={handleSearch}/>
+        <button type="button" disabled={!searchTerm} onClick={handleClick}>Submit</button>
         <List list={songs}/>
       </>
     }
