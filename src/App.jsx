@@ -11,31 +11,34 @@ function App() {
     setSearchTerm(event.target.value);
   };
 
-  const [searchClicked, setSearchClicked] = useState();
-
-  const handleClick = () => {
-    setSearchClicked(true)
+  const handleSubmit = (event) => {
+    fetchData();
+    event.preventDefault();
   };
 
-  useEffect(() => {
-    (async () => {
-      const response = await api.get(searchTerm)
+  const fetchData = async () => {
+    const response = await api.get(searchTerm)
       if (response.ok) {
         setSongs(response.body.data);
       }
       else {
         setSongs(null);
       }
-    })();
-  }, [searchClicked, api]);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
     {songs === undefined ?
       <p>Waiting</p> :
       <>
-        <Search search={searchTerm} onSearch={handleSearch}/>
-        <button type="button" disabled={!searchTerm} onClick={handleClick}>Submit</button>
+        <form onSubmit={handleSubmit}>
+          <Search search={searchTerm} onSearch={handleSearch}/>
+          <button type="submit">Submit</button>
+        </form>
         <List list={songs}/>
       </>
     }
