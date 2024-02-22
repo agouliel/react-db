@@ -5,9 +5,9 @@ import './index.css'
 import ApiProvider from './contexts/ApiProvider'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  //<React.StrictMode>
     <ApiProvider>
     <App />
     </ApiProvider>
-  </React.StrictMode>,
+  //</React.StrictMode>,
 )

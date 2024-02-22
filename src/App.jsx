@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import { useApi } from './contexts/ApiProvider'
+import { sortBy } from 'lodash';
 
 function App() {
   const [songs, setSongs] = useState();
@@ -46,18 +47,41 @@ function App() {
   )
 }
 
-const List = ({ list }) => (
+const SORTS = {
+  NONE: (list) => list,
+  TITLE: (list) => sortBy(list, 'title'),
+}
+
+const List = ({ list }) => {
+  const [sort, setSort] = useState('NONE');
+  const handleSort = (sortKey) => {
+    setSort(sortKey)
+  };
+
+  const sortFunction = SORTS[sort];
+  const sortedList = sortFunction(list)
+
+  return (
   <ul>
-    {list.map(
+    <li style={{ display: 'flex' }}>
+      <span style={{ width: '50%' }}>
+        <button type="button" onClick={()=>handleSort('TITLE')}>
+        Title
+        </button>
+      </span>
+      <span style={{ width: '50%' }}>Artist</span>
+    </li>
+    {sortedList.map(
       (item) => (<Item key={item.sid} item={item}/>)
     )}
   </ul>
-)
+  )
+}
 
 const Item = ({ item }) => (
-  <li>
-    <span>{item.title}</span>-
-    <span>{item.artist}</span>
+  <li style={{ display: 'flex' }}>
+    <span style={{ width: '50%' }}>{item.title}</span>
+    <span style={{ width: '50%' }}>{item.artist}</span>
   </li>
 )
 
