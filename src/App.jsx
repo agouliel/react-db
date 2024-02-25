@@ -6,6 +6,8 @@ import { sortBy } from 'lodash';
 function App() {
   const [songs, setSongs] = useState();
   const [searchTerm, setSearchTerm] = useState('');
+  const [nextPage, setNextPage] = useState();
+  const [prevPage, setPrevPage] = useState();
   const api = useApi();
 
   const handleSearch = (event) => {
@@ -17,10 +19,24 @@ function App() {
     event.preventDefault();
   };
 
-  const fetchData = async () => {
-    const response = await api.get(searchTerm)
+  const handleNext = () => {
+    fetchData(nextPage);
+  };
+
+  const handlePrev = () => {
+    fetchData(prevPage);
+  };
+
+  const fetchData = async (page=0) => {
+    const response = await api.get(searchTerm, `page=${page}`)
       if (response.ok) {
         setSongs(response.body.data);
+        if (response.body.prev) {
+          setPrevPage(response.body.prev)
+        }
+        if (response.body.next) {
+          setNextPage(response.body.next)
+        }
       }
       else {
         setSongs(null);
@@ -41,6 +57,8 @@ function App() {
           <button type="submit">Submit</button>
         </form>
         <List list={songs}/>
+        <button type="button" onClick={handlePrev}>Previous</button>
+        <button type="button" onClick={handleNext}>Next</button>
       </>
     }
     </>
