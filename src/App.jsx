@@ -7,7 +7,6 @@ function App() {
   const [songs, setSongs] = useState();
   const [searchTerm, setSearchTerm] = useState('');
   const [nextPage, setNextPage] = useState();
-  const [prevPage, setPrevPage] = useState();
   const api = useApi();
 
   const handleSearch = (event) => {
@@ -19,25 +18,25 @@ function App() {
     event.preventDefault();
   };
 
-  const handleNext = () => {
-    fetchData(nextPage);
+  const handleMore = () => {
+    fetchData(1, nextPage);
   };
 
-  const handlePrev = () => {
-    fetchData(prevPage);
-  };
-
-  const fetchData = async (page=0) => {
+  const fetchData = async (more=0, page=1) => {
     const response = await api.get(searchTerm, `page=${page}`)
       if (response.ok) {
-        setSongs(response.body.data);
-        if (response.body.prev) {
-          setPrevPage(response.body.prev)
+        if (more) {
+          setSongs([...songs, ...response.body.data])
         }
+        else {
+          setSongs(response.body.data);
+        }
+        
         if (response.body.next) {
           setNextPage(response.body.next)
         }
       }
+      
       else {
         setSongs(null);
       }
@@ -57,8 +56,7 @@ function App() {
           <button type="submit">Submit</button>
         </form>
         <List list={songs}/>
-        <button type="button" onClick={handlePrev}>Previous</button>
-        <button type="button" onClick={handleNext}>Next</button>
+        <button type="button" onClick={handleMore}>More</button>
       </>
     }
     </>
