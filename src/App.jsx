@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import { useApi } from './contexts/ApiProvider'
 import { sortBy } from 'lodash';
+import Container from 'react-bootstrap/Container';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import { Stack } from 'react-bootstrap';
 
 function App() {
   const [songs, setSongs] = useState();
@@ -47,7 +51,12 @@ function App() {
   }, []);
 
   return (
-    <>
+    <Container fluid className="App">
+    <Header />
+    <Container>
+    <Stack direction="horizontal">
+    <Sidebar />
+    <Container>
     {songs === undefined ?
       <p>Waiting</p> :
       <>
@@ -59,7 +68,10 @@ function App() {
         <button type="button" onClick={handleMore}>More</button>
       </>
     }
-    </>
+    </Container>
+    </Stack>
+    </Container>
+    </Container>
   )
 }
 
