@@ -52,25 +52,25 @@ function App() {
 
   return (
     <Container fluid className="App">
-    <Header />
-    <Container>
-    <Stack direction="horizontal">
-    <Sidebar />
-    <Container>
-    {songs === undefined ?
-      <p>Waiting</p> :
-      <>
-        <form onSubmit={handleSubmit}>
-          <Search search={searchTerm} onSearch={handleSearch}/>
-          <button type="submit">Submit</button>
-        </form>
-        <List list={songs}/>
-        <button type="button" onClick={handleMore}>More</button>
-      </>
-    }
-    </Container>
-    </Stack>
-    </Container>
+      <Header />
+      <Container>
+        <Stack direction="horizontal">
+          <Sidebar />
+          <Container>
+          {songs === undefined ?
+            <p>Waiting</p> :
+            <>
+              <form onSubmit={handleSubmit}>
+                <Search search={searchTerm} onSearch={handleSearch}/>
+                <button type="submit">Submit</button>
+              </form>
+              <List list={songs}/>
+              <button type="button" onClick={handleMore}>More</button>
+            </>
+          }
+          </Container>
+        </Stack>
+      </Container>
     </Container>
   )
 }
